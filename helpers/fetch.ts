@@ -1,4 +1,4 @@
-export const fetcher = async (url: string, options: Record<string, never>) => {
+export const fetcher = async (url: string, options?: Record<string, never>) => {
 	try {
 		const response = await fetch(url, options);
 		const data = await response.json();

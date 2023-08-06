@@ -15,8 +15,9 @@ const App = () => {
 	const [nftData, setNftData] = useState<[]>([]);
 
 	const isItemLoaded = index => index < nftData.length && nftData[index] !== null;
-	const loadMoreItems = (startIndex, stopIndex) => {
-		return nftData;
+	const loadMoreItems = async () => {
+		const response = await fetcher(NFTS_URL);
+		setNftData(response.results);
 	};
 
 	const getNFTs = useCallback(async () => {
@@ -27,9 +28,6 @@ const App = () => {
 	useEffect(() => {
 		getNFTs();
 	}, [getNFTs]);
-
-	const columnWidth = 400;
-	const rowHeight = 500;
 
 	return (
 		<Container fluid className="py-4">
@@ -42,8 +40,8 @@ const App = () => {
 									<Grid
 										width={width}
 										height={height}
-										rowHeight={rowHeight}
-										columnWidth={columnWidth}
+										rowHeight={500}
+										columnWidth={400}
 										rowCount={nftData.length / 4}
 										columnCount={4}
 										cellRenderer={({ columnIndex, key, rowIndex, style }) => (
