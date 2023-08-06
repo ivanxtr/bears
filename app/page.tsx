@@ -1,95 +1,70 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client';
+import { useEffect, useCallback, useState } from 'react';
+import CardComponent from '@/components/Card';
+import { Grid, AutoSizer } from 'react-virtualized';
+import { FixedSizeList as List } from 'react-window';
+import InfiniteLoader from 'react-window-infinite-loader';
+import Container from 'react-bootstrap/Container';
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+import { NFTS_URL } from '@/constants';
+import { fetcher } from '@/helpers/fetch';
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+const App = () => {
+	const [nftData, setNftData] = useState<[]>([]);
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+	const isItemLoaded = index => index < nftData.length && nftData[index] !== null;
+	const loadMoreItems = (startIndex, stopIndex) => {
+		return nftData;
+	};
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
+	const getNFTs = useCallback(async () => {
+		const response = await fetcher(NFTS_URL);
+		setNftData(response.results);
+	}, []);
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+	useEffect(() => {
+		getNFTs();
+	}, [getNFTs]);
+
+	const columnWidth = 400;
+	const rowHeight = 500;
+
+	return (
+		<Container fluid className="py-4">
+			<div style={{ flex: '1 1 auto', height: '100vh' }}>
+				<InfiniteLoader isItemLoaded={isItemLoaded} itemCount={nftData.length} loadMoreItems={loadMoreItems}>
+					{({ onItemsRendered, ref }) => (
+						<AutoSizer>
+							{({ height, width }) => {
+								return (
+									<Grid
+										width={width}
+										height={height}
+										rowHeight={rowHeight}
+										columnWidth={columnWidth}
+										rowCount={nftData.length / 4}
+										columnCount={4}
+										cellRenderer={({ columnIndex, key, rowIndex, style }) => (
+											<CardComponent
+												index={rowIndex * 4 + columnIndex}
+												style={style}
+												nft={nftData}
+												key={key}
+											/>
+										)}
+										ref={ref}
+										onItemsRendered={onItemsRendered}
+									/>
+								);
+							}}
+						</AutoSizer>
+					)}
+				</InfiniteLoader>
+			</div>
+		</Container>
+	);
+};
+
+export default App;
