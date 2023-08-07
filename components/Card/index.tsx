@@ -1,11 +1,14 @@
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
+import { type Result } from '../../types';
 
 interface CardProps {
-	nftData: [];
+	nft: Result[];
+	index: number;
+	style: {};
 }
 
-const CardComponent = ({ index, style, nft }) => {
+const CardComponent = ({ index, style, nft }: CardProps) => {
 	return (
 		<div style={{ ...style, width: 360 }} id="card">
 			<Card style={{ width: '360px' }}>
