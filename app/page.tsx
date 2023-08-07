@@ -1,17 +1,17 @@
 'use client';
-import { useEffect, useCallback, useState, useRef } from 'react';
+import { useEffect, useCallback, useState, useRef, useMemo } from 'react';
 import { Grid, AutoSizer } from 'react-virtualized';
-import { type Result } from '../types';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
+import debouce from 'lodash.debounce';
 
-import { NFTS_URL } from '@/constants';
+import { NFTS_URL, NFTS_LIMIT, ROW_HEIGHT, COLUMN_WIDTH, COLUMN_COUNT } from '@/constants';
 import { fetcher } from '@/helpers/fetch';
 import CardComponent from '@/components/Card';
-
+import { type Result } from '../types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
@@ -19,9 +19,10 @@ const App = () => {
 	const [nftData, setNftData] = useState<Result[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const pulledNfts = useRef<Result[]>([]);
+	const [searchTerm, setSearchTerm] = useState<string>('');
 
 	const loadMoreItems = async () => {
-		const response = await fetcher(NFTS_URL + nftData.length / 20);
+		const response = await fetcher(NFTS_URL + nftData.length / NFTS_LIMIT);
 		setNftData(prev => prev.concat(response.results));
 		pulledNfts.current = pulledNfts.current.concat(response.results);
 		setLoading(false);
@@ -35,7 +36,7 @@ const App = () => {
 
 	const onScrollFunc = (e: any) => {
 		const { scrollTop, scrollHeight, clientHeight } = e;
-		const isNearBottom = scrollTop + clientHeight >= scrollHeight;
+		const isNearBottom = scrollTop + clientHeight - 10 === scrollHeight - 10;
 
 		if (isNearBottom) {
 			loadMoreItems();
@@ -43,13 +44,16 @@ const App = () => {
 		}
 	};
 
-	const onSearch = (e: any) => {
+	const onSearch = (e: { target: { value: string } }) => {
 		const { value } = e.target;
-		const filteredNfts: any = pulledNfts.current.filter((nft: any) => {
+		setSearchTerm(value);
+		const filteredNfts: Result[] = pulledNfts.current.filter((nft: Result) => {
 			return nft.title.toLowerCase().includes(value.toLowerCase());
 		});
 		setNftData(filteredNfts);
 	};
+
+	const debouncedResults = useMemo(() => debouce(onSearch, 300), []);
 
 	useEffect(() => {
 		getNFTs();
@@ -62,10 +66,10 @@ const App = () => {
 					<Form className="d-flex">
 						<Form.Control
 							type="search"
-							placeholder="Search"
+							placeholder="Search Okay Bear"
 							className="me-2"
 							aria-label="Search"
-							onChange={onSearch}
+							onChange={debouncedResults}
 						/>
 					</Form>
 				</Col>
@@ -77,14 +81,14 @@ const App = () => {
 							<Grid
 								width={width}
 								height={height}
-								rowHeight={500}
-								columnWidth={400}
-								rowCount={Math.round(nftData.length / 4)}
-								columnCount={4}
-								onScroll={onScrollFunc}
+								rowHeight={ROW_HEIGHT}
+								columnWidth={COLUMN_WIDTH}
+								rowCount={Math.round(nftData.length / COLUMN_COUNT)}
+								columnCount={COLUMN_COUNT}
+								onScroll={searchTerm === '' ? e => onScrollFunc(e) : () => {}}
 								cellRenderer={({ columnIndex, key, rowIndex, style }) => (
 									<CardComponent
-										index={Math.round(rowIndex * 4 + columnIndex)}
+										index={Math.round(rowIndex * COLUMN_COUNT + columnIndex)}
 										style={style}
 										nft={nftData}
 										key={key}

@@ -1,6 +1,7 @@
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import { type Result } from '../../types';
+import { CARD_WIDTH } from '@/constants';
 
 interface CardProps {
 	nft: Result[];
@@ -9,9 +10,10 @@ interface CardProps {
 }
 
 const CardComponent = ({ index, style, nft }: CardProps) => {
+	if (nft[index]?.img === undefined) return <></>;
 	return (
-		<div style={{ ...style, width: 360 }} id="card">
-			<Card style={{ width: '360px' }}>
+		<div style={{ ...style, width: CARD_WIDTH }} id="card">
+			<Card style={{ width: CARD_WIDTH }}>
 				<Card.Img variant="top" src={nft[index]?.img} />
 				<Card.Body>
 					<Card.Title>
