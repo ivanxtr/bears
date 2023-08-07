@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "cypress:open": "cypress open",
+    "test:components": "npx cypress run --component"
   },
   "dependencies": {
     "@types/lodash.debounce": "^4.0.7",
@@ -15,6 +19,7 @@
     "@types/react": "18.2.18",
     "@types/react-dom": "18.2.7",
     "bootstrap": "^5.3.1",
+    "cypress": "^12.17.3",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
     "lodash.debounce": "^4.0.8",
@@ -29,6 +34,14 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^7.2.1",
+    "@storybook/addon-interactions": "^7.2.1",
+    "@storybook/addon-links": "^7.2.1",
+    "@storybook/addon-onboarding": "^1.0.8",
+    "@storybook/blocks": "^7.2.1",
+    "@storybook/nextjs": "^7.2.1",
+    "@storybook/react": "^7.2.1",
+    "@storybook/testing-library": "^0.2.0",
     "@types/react-virtualized": "^9.21.22",
     "@types/react-window": "^1.8.5",
     "@types/react-window-infinite-loader": "^1.0.6",
@@ -36,6 +49,8 @@
     "@typescript-eslint/parser": "^6.2.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
-    "prettier": "^3.0.1"
+    "eslint-plugin-storybook": "^0.6.13",
+    "prettier": "^3.0.1",
+    "storybook": "^7.2.1"
   }
 }
