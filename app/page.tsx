@@ -2,8 +2,6 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
 import CardComponent from '@/components/Card';
 import { Grid, AutoSizer } from 'react-virtualized';
-import { FixedSizeList as List } from 'react-window';
-import InfiniteLoader from 'react-window-infinite-loader';
 import Container from 'react-bootstrap/Container';
 
 import { NFTS_URL } from '@/constants';
@@ -12,17 +10,17 @@ import { fetcher } from '@/helpers/fetch';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
+	let count = 0;
 	const [nftData, setNftData] = useState<[]>([]);
-	const [isFetching, setIsFetching] = useState(false);
 
 	const loadMoreItems = async () => {
-		setIsFetching(true);
-		const response = await fetcher(NFTS_URL);
+		const response = await fetcher(NFTS_URL + nftData.length / 20);
 		setNftData(prev => prev.concat(response.results));
+		count += 1;
 	};
 
 	const getNFTs = useCallback(async () => {
-		const response = await fetcher(NFTS_URL);
+		const response = await fetcher(NFTS_URL + count);
 		setNftData(response.results);
 	}, []);
 
@@ -31,7 +29,6 @@ const App = () => {
 		const isNearBottom = scrollTop + clientHeight >= scrollHeight;
 
 		if (isNearBottom) {
-			console.log('Reached bottom');
 			loadMoreItems();
 		}
 	};
