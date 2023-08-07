@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import type { Meta, StoryObj } from '@storybook/react'
 import VirtualizedComponent from './index'
+import './virtualized.css'
 
 const meta: Meta<typeof VirtualizedComponent> = {
   component: VirtualizedComponent,
@@ -35,14 +36,6 @@ export const Default: Story = {
       }
     ],
     searchTerm: '',
-    onScrollFunc: () => {}
-  }
-}
-
-export const SearchTerm: Story = {
-  args: {
-    nftData: [],
-    searchTerm: 'test',
     onScrollFunc: () => {}
   }
 }

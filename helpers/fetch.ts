@@ -4,7 +4,10 @@ export const fetcher = async (url: string, options?: Record<string, never>) => {
   let count = RETRY_COUNT
   while (count > 0) {
     try {
-      const response = await fetch(url, options)
+      const response = await fetch(url, {
+        ...options,
+        mode: 'cors'
+      })
       const data = await response.json()
       return data
     } catch (error) {
