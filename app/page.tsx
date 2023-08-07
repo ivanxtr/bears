@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import CardComponent from '@/components/Card';
 import { Grid, AutoSizer } from 'react-virtualized';
 import { FixedSizeList as List } from 'react-window';
@@ -13,17 +13,28 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
 	const [nftData, setNftData] = useState<[]>([]);
+	const [isFetching, setIsFetching] = useState(false);
 
-	const isItemLoaded = index => index < nftData.length && nftData[index] !== null;
 	const loadMoreItems = async () => {
+		setIsFetching(true);
 		const response = await fetcher(NFTS_URL);
-		setNftData(response.results);
+		setNftData(prev => prev.concat(response.results));
 	};
 
 	const getNFTs = useCallback(async () => {
 		const response = await fetcher(NFTS_URL);
 		setNftData(response.results);
 	}, []);
+
+	const onScrollFunc = (e: any) => {
+		const { scrollTop, scrollHeight, clientHeight } = e;
+		const isNearBottom = scrollTop + clientHeight >= scrollHeight;
+
+		if (isNearBottom) {
+			console.log('Reached bottom');
+			loadMoreItems();
+		}
+	};
 
 	useEffect(() => {
 		getNFTs();
@@ -32,34 +43,29 @@ const App = () => {
 	return (
 		<Container fluid className="py-4">
 			<div style={{ flex: '1 1 auto', height: '100vh' }}>
-				<InfiniteLoader isItemLoaded={isItemLoaded} itemCount={nftData.length} loadMoreItems={loadMoreItems}>
-					{({ onItemsRendered, ref }) => (
-						<AutoSizer>
-							{({ height, width }) => {
-								return (
-									<Grid
-										width={width}
-										height={height}
-										rowHeight={500}
-										columnWidth={400}
-										rowCount={nftData.length / 4}
-										columnCount={4}
-										cellRenderer={({ columnIndex, key, rowIndex, style }) => (
-											<CardComponent
-												index={rowIndex * 4 + columnIndex}
-												style={style}
-												nft={nftData}
-												key={key}
-											/>
-										)}
-										ref={ref}
-										onItemsRendered={onItemsRendered}
+				<AutoSizer>
+					{({ height, width }) => {
+						return (
+							<Grid
+								width={width}
+								height={height}
+								rowHeight={500}
+								columnWidth={400}
+								rowCount={nftData.length / 4}
+								columnCount={4}
+								onScroll={onScrollFunc}
+								cellRenderer={({ columnIndex, key, rowIndex, style }) => (
+									<CardComponent
+										index={rowIndex * 4 + columnIndex}
+										style={style}
+										nft={nftData}
+										key={key}
 									/>
-								);
-							}}
-						</AutoSizer>
-					)}
-				</InfiniteLoader>
+								)}
+							/>
+						);
+					}}
+				</AutoSizer>
 			</div>
 		</Container>
 	);
