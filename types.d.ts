@@ -4,36 +4,36 @@ export interface APIMainnetMagicedenIo {
 }
 
 export interface Result {
-  mintAddress: string
-  supply: number
+  mintAddress?: string
+  supply?: number
   title: string
-  primarySaleHappened: boolean
-  updateAuthority: UpdateAuthority
-  onChainCollection: OnChainCollection
-  sellerFeeBasisPoints: number
-  creators: Creator[]
-  price: number
-  escrowPubkey: string
-  owner: string
-  v2: V2
-  id: string
-  tokenDelegateValid: boolean
-  isFrozen: boolean
-  tokenStandard: number
-  mip1State: number
+  primarySaleHappened?: boolean
+  updateAuthority?: UpdateAuthority
+  onChainCollection?: OnChainCollection
+  sellerFeeBasisPoints?: number
+  creators?: Creator[]
+  price?: number
+  escrowPubkey?: string
+  owner?: string
+  v2?: V2
+  id?: string
+  tokenDelegateValid?: boolean
+  isFrozen?: boolean
+  tokenStandard?: number
+  mip1State?: number
   img: string
-  attributes: Attribute[]
-  externalURL: string
-  content: string
-  collectionName: CollectionName
-  collectionTitle: CollectionTitle
-  isTradeable: boolean
-  rarity: Rarity
-  listingType: ListingType
-  listingUpdatedAt: ListingUpdatedAt
-  lastSalePriceWithFees: number
-  createdAt: Date
-  updatedAt: Date
+  attributes?: Attribute[]
+  externalURL?: string
+  content?: string
+  collectionName?: CollectionName
+  collectionTitle?: CollectionTitle
+  isTradeable?: boolean
+  rarity?: Rarity
+  listingType?: ListingType
+  listingUpdatedAt?: ListingUpdatedAt
+  lastSalePriceWithFees?: number
+  createdAt?: Date
+  updatedAt?: Date
   lastSalePrice?: number
 }
 
