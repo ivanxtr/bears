@@ -3,6 +3,7 @@ import { Grid, AutoSizer } from 'react-virtualized'
 import { type Result } from '../../types'
 import { ROW_HEIGHT, COLUMN_WIDTH, COLUMN_COUNT, CARD_WIDTH } from '@/constants'
 import CardComponent from '@/components/Card'
+import './virtualized.css'
 
 interface VirtualizedPropsTypes {
   nftData: Result[]
