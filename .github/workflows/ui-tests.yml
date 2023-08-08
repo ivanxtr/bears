@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: '18.17.0'
       - name: Restore yarn dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: yarn-cache
         with:
           path: |
@@ -40,12 +40,7 @@ jobs:
             node_modules
           key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-      - name: Build Storybook
-        run: yarn build-storybook --quiet
-      - name: Serve Storybook and run tests
-        run: |
-          npx concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
-            "npx http-server storybook-static --port 6006"
+            ${{ runner.os }}-yarn-v1
   # Run visual and composition tests with Chromatic
   visual-and-composition:
     runs-on: ubuntu-latest
