@@ -37,6 +37,7 @@ const Virtualized = ({
     <div
       style={{ flex: '1 1 auto', height: '85vh', top: '3vh' }}
       id="virtualize-main"
+      data-cy="virtualize-main"
     >
       <AutoSizer>
         {({ height, width }) => {
