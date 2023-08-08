@@ -1,3 +1,23 @@
 {
-  "extends": ["next/core-web-vitals", "plugin:storybook/recommended"]
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "allowImportExportEverywhere": true
+  },
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "next/core-web-vitals",
+    "plugin:cypress/recommended"
+  ],
+  "rules": {
+    "no-unsafe-optional-chaining": "warn",
+    "cypress/unsafe-to-chain-command": "off",
+    "no-unused-vars": "warn"
+  },
+  "ignorePatterns": ["**/pages"]
 }
