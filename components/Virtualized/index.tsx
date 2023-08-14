@@ -47,7 +47,7 @@ const Virtualized = ({
               height={height}
               rowHeight={ROW_HEIGHT}
               columnWidth={COLUMN_WIDTH}
-              rowCount={Math.round(nftData.length / columnCount)}
+              rowCount={Math.round(nftData.length / columnCount) > 1 ? Math.round(nftData.length / columnCount) : 1}
               columnCount={columnCount}
               onScroll={searchTerm === '' ? (e) => onScrollFunc(e) : () => {}}
               cellRenderer={({ columnIndex, key, rowIndex, style }) => (

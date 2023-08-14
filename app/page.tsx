@@ -12,22 +12,21 @@ import { type Result } from '../types'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 const App = () => {
-  const [count, setCount] = useState<number>(0)
   const [nftData, setNftData] = useState<Result[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const pulledNfts = useRef<Result[]>([])
   const [searchTerm, setSearchTerm] = useState<string>('')
 
   const loadMoreItems = async () => {
-    setCount(prev => prev + 1);
-    const response = await fetcher(NFTS_URL + (NFTS_LIMIT * count))
+    const response = await fetcher(NFTS_URL + Math.round(nftData.length / NFTS_LIMIT) * NFTS_LIMIT)
     setNftData((prev) => prev.concat(response.results))
     pulledNfts.current = pulledNfts.current.concat(response.results)
+
     setLoading(false)
   }
 
   const getNFTs = useCallback(async () => {
-    const response = await fetcher(NFTS_URL + count)
+    const response = await fetcher(NFTS_URL + 0)
     setNftData(response.results)
     pulledNfts.current = response.results
   }, [])
