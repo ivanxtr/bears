@@ -1,4 +1,4 @@
-# NFT's
+# NFT's App
 
 This app is been build using Next.js and following the component design pattern.
 this in order to split the responsibilities and treat it separately.
